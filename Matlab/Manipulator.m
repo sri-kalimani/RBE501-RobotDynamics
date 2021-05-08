@@ -26,9 +26,9 @@ robot = SerialLink([Revolute('a', 0, 'd', L1, 'alpha', pi/2, 'offset', -pi/2), .
                     Revolute('a', 0, 'd', L4, 'alpha', 0)], 'name', 'Fanuc LR Mate 200iD'); 
 
 % Joint limits
-qlim = [-pi/2  pi/2;  % q(1)
-        -pi/4  pi/2;  % q(2)
-        0      pi/3;  % q(3)
+qlim = [-pi  pi;  % q(1)
+        -pi/2  pi/2;  % q(2)
+        -pi/2  pi/2;  % q(3)
         -pi/2  pi/2;  % q(4)
         -pi/2  pi/2;  % q(5)
         -pi/2  pi/2]; % q(6)
@@ -62,3 +62,46 @@ v6 = cross(-w6, p6);
 
 S = [w1 w2 w3 w4 w5 w6;
      v1 v2 v3 v4 v5 v6;];
+ %% Part B - Calculate the forward kinematics with the Product of Exponentials formula
+% First, let us calculate the homogeneous transformation matrix M for the
+% home configuration
+
+R = [0 0 1;
+     0 1 0;
+     -1 0 0];
+M = [R p6;
+     0 0 0 1];
+
+fprintf('---------------------Forward Kinematics Test---------------------\n');
+fprintf(['Testing ' num2str(nTests) ' random configurations.\n']);
+fprintf('Progress: ');
+nbytes = fprintf('0%%'); 
+ 
+% Test the forward kinematics for 100 random sets of joint variables
+for ii = 1 : nTests
+    fprintf(repmat('\b',1,nbytes));
+    nbytes = fprintf('%0.f%%', ceil(ii/nTests*100));
+    
+    % Generate a random configuration
+    q = [qlim(1,1) + (qlim(1,2) - qlim(1,1)) * rand(), ...
+         qlim(2,1) + (qlim(2,2) - qlim(2,1)) * rand(), ...
+         qlim(3,1) + (qlim(3,2) - qlim(3,1)) * rand(), ...
+         qlim(4,1) + (qlim(4,2) - qlim(4,1)) * rand(), ...
+         qlim(5,1) + (qlim(5,2) - qlim(5,1)) * rand(), ...
+         qlim(6,1) + (qlim(6,2) - qlim(6,1)) * rand()];
+    
+    % Calculate the forward kinematics
+    T = fkine(S, M, q)
+    
+    if plotOn
+        robot.teach(q);
+        title('Forward Kinematics Test');
+    end
+    
+    %For testing
+    %T_real = robot.fkine(q)
+    assert(all(all(abs(double(robot.fkine(q)) - T) < 1e-10)));
+end
+ 
+fprintf('\nTest passed successfully.\n');
+
