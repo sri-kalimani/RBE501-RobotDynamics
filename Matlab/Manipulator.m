@@ -16,7 +16,7 @@ L2 = 0.117;
 L3 = 0.14959;
 L4 = 0.03601;
 
-robot = SerialLink([Revolute('a', 0, 'd', L1, 'alpha',0), ...
+robot = SerialLink([Revolute('a', 0, 'd', L1, 'alpha',-pi/2), ...
                     Revolute('a', L2, 'd', 0, 'alpha',0), ...
                     Revolute('a', 0, 'd', 0, 'alpha', -pi/2, 'offset', 0), ...
                     Revolute('a', 0, 'd', L3, 'alpha', pi/2, 'offset', 0), ...
@@ -24,12 +24,12 @@ robot = SerialLink([Revolute('a', 0, 'd', L1, 'alpha',0), ...
                     Revolute('a', 0, 'd', L4, 'alpha', 0, 'offset', 0)], 'name', 'Fanuc LR Mate 200iD'); 
 
 % Joint limits
-qlim = [-pi  pi;        % q(1)
-        -pi/2  pi/2;  % q(2)
-        -pi/2  pi/2;  % q(3)              %FIX LIMITS
-        -pi/2  pi/2;  % q(4)
-        -pi/2  pi/2;  % q(5)
-        -pi/2  pi/2]; % q(6)
+qlim = [-pi  pi;      % q(1)
+        -pi  pi;  % q(2)
+        -pi  pi;  % q(3)              %FIX LIMITS
+        -pi  pi;  % q(4)
+        -pi  pi;  % q(5)
+        -pi  pi]; % q(6)
 
 % Display the manipulator in the home configuration
 q = zeros(1,6);
@@ -44,17 +44,17 @@ robot.teach(q);
 
 w1 = [0; 0; 1];
 w2 = [0; 1; 0];
-w3 = [0; -1; 0];
+w3 = [0; 1; 0];
 w4 = [1; 0; 0];
-w5 = [0; -1; 0];
+w5 = [0; 1; 0];
 w6 = [1; 0; 0];
 
 p1 = [0; 0; 0];
 p2 = [0; 0; L1];
 p3 = [0; 0; L2+L1];
-p4 = p3;
+p4 = [L3; 0; L2+L1];
 p5 = [L3; 0; L2+L1];
-p6 = p5;
+p6 = [L3; 0; L2+L1];
 p7 = [L3+L4; 0; L2+L1]; 
 % p6 = [L3+L4; -W; L1+L2];
 
@@ -66,7 +66,7 @@ v5 = cross(-w5, p5);
 v6 = cross(-w6, p6);
 
 S = [w1 w2 w3 w4 w5 w6;
-    v1 v2 v3 v4 v5 v6;];
+     v1 v2 v3 v4 v5 v6;];
 
 
 % S = [ w1 w2 % w3 w4 w5 w6;
@@ -100,8 +100,8 @@ for ii = 1 : nTests
          qlim(6,1) + (qlim(6,2) - qlim(6,1)) * rand()];
     
     % Calculate the forward kinematics
-        T = fkine(S, M, q)
-%       T = robot.fkine(q)
+        T = fkine(S, M, q);
+       %T = robot.fkine(q);
     
     if plotOn
         robot.teach(q);
@@ -109,8 +109,8 @@ for ii = 1 : nTests
     end
     
     %For testing
-    T_real = robot.fkine(q)
-    T_diff = T - double(T_real)
+    T_real = robot.fkine(q);
+    T_diff = T - double(T_real);
     assert(all(all(abs(double(robot.fkine(q)) - T) < 1e-10)));
 end
  
