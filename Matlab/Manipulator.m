@@ -70,77 +70,77 @@ R = [0 0 1;
 M = [R p7;
      0 0 0 1];
 
-% fprintf('---------------------Forward Kinematics Test---------------------\n');
-% fprintf(['Testing ' num2str(nTests) ' random configurations.\n']);
-% fprintf('Progress: ');
-% nbytes = fprintf('0%%'); 
-%  
-% % Test the forward kinematics for 100 random sets of joint variables
-% for ii = 1 : nTests
-%     fprintf(repmat('\b',1,nbytes));
-%     nbytes = fprintf('%0.f%%', ceil(ii/nTests*100));
-%     
-%     % Generate a random configuration
-%     q = [qlim(1,1) + (qlim(1,2) - qlim(1,1)) * rand(), ...
-%          qlim(2,1) + (qlim(2,2) - qlim(2,1)) * rand(), ...
-%          qlim(3,1) + (qlim(3,2) - qlim(3,1)) * rand(), ...
-%          qlim(4,1) + (qlim(4,2) - qlim(4,1)) * rand(), ...
-%          qlim(5,1) + (qlim(5,2) - qlim(5,1)) * rand(), ...
-%          qlim(6,1) + (qlim(6,2) - qlim(6,1)) * rand()];
-%     
-%     % Calculate the forward kinematics
-%         T = fkine(S, M, q);
-%        %T = robot.fkine(q);
-%     
-%     if plotOn
-%         robot.teach(q);
-%         title('Forward Kinematics Test');
-%     end
-%     
-%     %For testing
-%     T_real = robot.fkine(q);
-%     T_diff = T - double(T_real);
-%     assert(all(all(abs(double(robot.fkine(q)) - T) < 1e-10)));
-% end
-%  
-% fprintf('\nTest passed successfully.\n');
+fprintf('---------------------Forward Kinematics Test---------------------\n');
+fprintf(['Testing ' num2str(nTests) ' random configurations.\n']);
+fprintf('Progress: ');
+nbytes = fprintf('0%%'); 
+ 
+% Test the forward kinematics for 100 random sets of joint variables
+for ii = 1 : nTests
+    fprintf(repmat('\b',1,nbytes));
+    nbytes = fprintf('%0.f%%', ceil(ii/nTests*100));
+    
+    % Generate a random configuration
+    q = [qlim(1,1) + (qlim(1,2) - qlim(1,1)) * rand(), ...
+         qlim(2,1) + (qlim(2,2) - qlim(2,1)) * rand(), ...
+         qlim(3,1) + (qlim(3,2) - qlim(3,1)) * rand(), ...
+         qlim(4,1) + (qlim(4,2) - qlim(4,1)) * rand(), ...
+         qlim(5,1) + (qlim(5,2) - qlim(5,1)) * rand(), ...
+         qlim(6,1) + (qlim(6,2) - qlim(6,1)) * rand()];
+    
+    % Calculate the forward kinematics
+        T = fkine(S, M, q);
+       %T = robot.fkine(q);
+    
+    if plotOn
+        robot.teach(q);
+        title('Forward Kinematics Test');
+    end
+    
+    %For testing
+    T_real = robot.fkine(q);
+    T_diff = T - double(T_real);
+    assert(all(all(abs(double(robot.fkine(q)) - T) < 1e-10)));
+end
+ 
+fprintf('\nTest passed successfully.\n');
 
 
-% %% Part B - Calculate the Body Jacobian of the manipulator
-% fprintf('-------------------Differential Kinematics Test------------------\n');
-% fprintf(['Testing ' num2str(nTests) ' random configurations.\n']);
-% fprintf('Progress: ');
-% nbytes = fprintf('0%%'); 
-% 
-% % Test the correctness of the Jacobian for 10 random sets of joiny
-% % variables
-% for ii = 1 : nTests
-%     fprintf(repmat('\b',1,nbytes));
-%     nbytes = fprintf('%0.f%%', ceil(ii/nTests*100));
-%     
-%     % Generate a random configuration
-%         q = [qlim(1,1) + (qlim(1,2) - qlim(1,1)) * rand(), ...
-%              qlim(2,1) + (qlim(2,2) - qlim(2,1)) * rand(), ...
-%              qlim(3,1) + (qlim(3,2) - qlim(3,1)) * rand(), ...
-%              qlim(4,1) + (qlim(4,2) - qlim(4,1)) * rand(), ...
-%              qlim(5,1) + (qlim(5,2) - qlim(5,1)) * rand(), ...
-%              qlim(6,1) + (qlim(6,2) - qlim(6,1)) * rand()];
-%      
-%     
-%     % Calculate the Jacobian in the body frame    
-%     J_b = jacobe(S,M,q);
-%     
-%     if plotOn
-%         robot.teach(q);
-%         title('Differential Kinematics Test');
-%     end
-%     
-%     % Test the correctness of the Jacobian
-%     J_test = [J_b(4:6,:); J_b(1:3,:)]; % swap the rotation and translation components
-%     assert(all(all(abs(double(robot.jacobe(q)) - J_test) < 1e-10)));
-% end
-% 
-% fprintf('\nTest passed successfully.\n');
+%% Part B - Calculate the Body Jacobian of the manipulator
+fprintf('-------------------Differential Kinematics Test------------------\n');
+fprintf(['Testing ' num2str(nTests) ' random configurations.\n']);
+fprintf('Progress: ');
+nbytes = fprintf('0%%'); 
+
+% Test the correctness of the Jacobian for 10 random sets of joiny
+% variables
+for ii = 1 : nTests
+    fprintf(repmat('\b',1,nbytes));
+    nbytes = fprintf('%0.f%%', ceil(ii/nTests*100));
+    
+    % Generate a random configuration
+        q = [qlim(1,1) + (qlim(1,2) - qlim(1,1)) * rand(), ...
+             qlim(2,1) + (qlim(2,2) - qlim(2,1)) * rand(), ...
+             qlim(3,1) + (qlim(3,2) - qlim(3,1)) * rand(), ...
+             qlim(4,1) + (qlim(4,2) - qlim(4,1)) * rand(), ...
+             qlim(5,1) + (qlim(5,2) - qlim(5,1)) * rand(), ...
+             qlim(6,1) + (qlim(6,2) - qlim(6,1)) * rand()];
+     
+    
+    % Calculate the Jacobian in the body frame    
+    J_b = jacobe(S,M,q);
+    
+    if plotOn
+        robot.teach(q);
+        title('Differential Kinematics Test');
+    end
+    
+    % Test the correctness of the Jacobian
+    J_test = [J_b(4:6,:); J_b(1:3,:)]; % swap the rotation and translation components
+    assert(all(all(abs(double(robot.jacobe(q)) - J_test) < 1e-10)));
+end
+
+fprintf('\nTest passed successfully.\n');
 
 % 
 % % Part C - Calculate the Analyical Jacobian of the manipulator
@@ -161,7 +161,7 @@ M = [R p7;
 %         qlim(3,1) + (qlim(3,2) - qlim(3,1)) * rand()];
 %     
 %     % Calculate the Analytical Jacobian
-%     J_a = jacoba(S_space,M,q);
+%     J_a = jacoba(S,M,q); % S in space
 %     
 %     if plotOn
 %         robot.teach(q);
