@@ -190,10 +190,10 @@ currentQ = zeros(1,6);
 J_a = jacoba(S,M,currentQ);
 
 % Generate path to follow
-t = linspace(0, 2*pi, nTests);
-x = 0.25 * cos(t);
-y = 0.25 * sin(t);
-z = 0.2 * ones(1,nTests);
+t = linspace(0, pi, nTests);
+x = 0.25 * sin(t);
+y = 0.25 * cos(t);
+z = 0.1 * ones(1,nTests);
 path = [x; y; z];
 lam =  0.1;          %tryna do ikin with this
 
