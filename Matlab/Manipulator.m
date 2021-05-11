@@ -11,21 +11,20 @@ nTests = 20; % number of random test configurations
 
 %% Create the manipulator
 % robot length values (meters)
-L1 = 0.465;
+L1 = 0.0465;
 L2 = 0.117;
-L3 = 0.1856;
-% L4 = 0.1;
-% W = 0.1;
+L3 = 0.14959;
+L4 = 0.03601;
 
-robot = SerialLink([Revolute('a', 0, 'd', L1, 'alpha', -pi/2, 'offset', 0), ...
-                    Revolute('a', L2, 'd', 0, 'alpha', 0,'offset', -pi/2), ...
-                    Revolute('a', L3, 'd', 0, 'alpha', pi/2, 'offset', 0), ...
-                    Revolute('a', 0, 'd', 0, 'alpha', pi/2, 'offset', 0), ...
+robot = SerialLink([Revolute('a', 0, 'd', L1, 'alpha',0), ...
+                    Revolute('a', L2, 'd', 0, 'alpha',0), ...
                     Revolute('a', 0, 'd', 0, 'alpha', -pi/2, 'offset', 0), ...
-                    Revolute('a', 0, 'd', 0, 'alpha', -pi/2)], 'name', 'Fanuc LR Mate 200iD'); 
+                    Revolute('a', 0, 'd', L3, 'alpha', pi/2, 'offset', 0), ...
+                    Revolute('a', 0, 'd', 0, 'alpha', -pi/2, 'offset', 0), ...
+                    Revolute('a', 0, 'd', L4, 'alpha', 0, 'offset', 0)], 'name', 'Fanuc LR Mate 200iD'); 
 
 % Joint limits
-qlim = [-pi  pi;  % q(1)
+qlim = [-pi  pi;        % q(1)
         -pi/2  pi/2;  % q(2)
         -pi/2  pi/2;  % q(3)              %FIX LIMITS
         -pi/2  pi/2;  % q(4)
@@ -45,17 +44,18 @@ robot.teach(q);
 
 w1 = [0; 0; 1];
 w2 = [0; 1; 0];
-w3 = [0; 1; 0];
+w3 = [0; -1; 0];
 w4 = [1; 0; 0];
-w5 = [0; 1; 0];
+w5 = [0; -1; 0];
 w6 = [1; 0; 0];
 
 p1 = [0; 0; 0];
 p2 = [0; 0; L1];
 p3 = [0; 0; L2+L1];
-p4 = [L3; 0; L2+L1];
-p5 = p4;
-p6 = p4;
+p4 = p3;
+p5 = [L3; 0; L2+L1];
+p6 = p5;
+p7 = [L3+L4; 0; L2+L1]; 
 % p6 = [L3+L4; -W; L1+L2];
 
 v1 = cross(-w1, p1);
@@ -66,7 +66,11 @@ v5 = cross(-w5, p5);
 v6 = cross(-w6, p6);
 
 S = [w1 w2 w3 w4 w5 w6;
-     v1 v2 v3 v4 v5 v6;];
+    v1 v2 v3 v4 v5 v6;];
+
+
+% S = [ w1 w2 % w3 w4 w5 w6;
+%       v1 v2];% v3 v4 v5 v6;];
  %% Part B - Calculate the forward kinematics with the Product of Exponentials formula
 % First, let us calculate the homogeneous transformation matrix M for the
 % home configuration
@@ -74,7 +78,7 @@ S = [w1 w2 w3 w4 w5 w6;
 R = [0 0 1;
      0 1 0;
      1 0 0];
-M = [R p6;
+M = [R p7;
      0 0 0 1];
 
 fprintf('---------------------Forward Kinematics Test---------------------\n');
@@ -106,6 +110,7 @@ for ii = 1 : nTests
     
     %For testing
     T_real = robot.fkine(q)
+    T_diff = T - double(T_real)
     assert(all(all(abs(double(robot.fkine(q)) - T) < 1e-10)));
 end
  

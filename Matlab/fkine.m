@@ -7,9 +7,9 @@ function T = fkine(S,M,q)
 %   Output: T - homogenous transformation matrix of end effector
 
     [m,n] = size(S);
-    T = eye(4);
+    T_c = eye(4);
     for i = 1:n
-        T = T * twist2ht(S(:,i),q(i));
+        T_c = T_c * twist2ht(S(:,i),q(i));
     end
-    T = T * M;
+    T = T_c * M;
 end
