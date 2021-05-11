@@ -60,15 +60,23 @@ v6 = cross(-w6, p6);
 S = [w1 w2 w3 w4 w5 w6;
      v1 v2 v3 v4 v5 v6;];
 
-%% Part B - Calculate the forward kinematics with the Product of Exponentials formula
-% First, let us calculate the homogeneous transformation matrix M for the
-% home configuration
-
 R = [0 0 1;
      0 -1 0;
      1 0 0];
 M = [R p7;
      0 0 0 1];
+
+[m, n] = size(S);
+S_body = [];
+
+for i = 1:6
+    S_body(:, i) = twistspace2body(S(1:6, i), M);
+end
+
+
+%% Part B - Calculate the forward kinematics with the Product of Exponentials formula
+% First, let us calculate the homogeneous transformation matrix M for the
+% home configuration
 
 fprintf('---------------------Forward Kinematics Test---------------------\n');
 fprintf(['Testing ' num2str(nTests) ' random configurations.\n']);
@@ -142,42 +150,45 @@ end
 
 fprintf('\nTest passed successfully.\n');
 
-% 
-% % Part C - Calculate the Analyical Jacobian of the manipulator
-% fprintf('---------------------Analytical Jacobian Test--------------------\n');
-% fprintf(['Testing ' num2str(nTests) ' random configurations.\n']);
-% fprintf('Progress: ');
-% nbytes = fprintf('0%%'); 
-% 
-% % Test the correctness of the Analytical Jacobian for 10 random sets of joint
-% % variables
-% for ii = 1 : nTests
-%     fprintf(repmat('\b',1,nbytes));
-%     nbytes = fprintf('%0.f%%', ceil(ii/nTests*100));
-%     
-%     % Generate a random configuration
-%     q = [qlim(1,1) + (qlim(1,2) - qlim(1,1)) * rand(), ...
-%         qlim(2,1) + (qlim(2,2) - qlim(2,1)) * rand(), ...
-%         qlim(3,1) + (qlim(3,2) - qlim(3,1)) * rand()];
-%     
-%     % Calculate the Analytical Jacobian
-%     J_a = jacoba(S,M,q); % S in space
-%     
-%     if plotOn
-%         robot.teach(q);
-%         title('Analytical Jacobian Test');
-%     end
-%     
-%     % Test the correctness of the Jacobian
-%     Jref = robot.jacob0(q);
-%     Jref = Jref(1:3,:);
-%     assert(all(all(abs(double(Jref) - J_a) < 1e-10)));
-% end
-% 
-% fprintf('\nTest passed successfully.\n');
-% 
-% 
-% %% Part D - Inverse Kinematics
+ 
+%% Part C - Calculate the Analyical Jacobian of the manipulator
+fprintf('---------------------Analytical Jacobian Test--------------------\n');
+fprintf(['Testing ' num2str(nTests) ' random configurations.\n']);
+fprintf('Progress: ');
+nbytes = fprintf('0%%'); 
+
+% Test the correctness of the Analytical Jacobian for 10 random sets of joint
+% variables
+for ii = 1 : nTests
+    fprintf(repmat('\b',1,nbytes));
+    nbytes = fprintf('%0.f%%', ceil(ii/nTests*100));
+    
+    % Generate a random configuration
+    q = [qlim(1,1) + (qlim(1,2) - qlim(1,1)) * rand(), ...
+         qlim(2,1) + (qlim(2,2) - qlim(2,1)) * rand(), ...
+         qlim(3,1) + (qlim(3,2) - qlim(3,1)) * rand(), ...
+         qlim(4,1) + (qlim(4,2) - qlim(4,1)) * rand(), ...
+         qlim(5,1) + (qlim(5,2) - qlim(5,1)) * rand(), ...
+         qlim(6,1) + (qlim(6,2) - qlim(6,1)) * rand()];
+    
+    % Calculate the Analytical Jacobian
+    J_a = jacoba(S,M,q); % S in space
+    
+    if plotOn
+        robot.teach(q);
+        title('Analytical Jacobian Test');
+    end
+    
+    % Test the correctness of the Jacobian
+    Jref = robot.jacob0(q);
+    Jref = Jref(1:3,:);
+    assert(all(all(abs(double(Jref) - J_a) < 1e-10)));
+end
+
+fprintf('\nTest passed successfully.\n');
+
+
+%% Part D - Inverse Kinematics
 fprintf('----------------------Inverse Kinematics Test--------------------\n');
 fprintf(['Testing ' num2str(nTests) ' random configurations.\n']);
 fprintf('Progress: ');
