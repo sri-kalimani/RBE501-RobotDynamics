@@ -1,0 +1,21 @@
+n = 6;
+q0 = [0 0 0 0 0 0];
+qf = [30 -45 30 60 15 60];
+time = 5000; %Total duration of the movement in millis
+time_step = 50; %Number of millis between each iteration in control loop
+
+overall_matrix = [];
+for ii = 1:n %Iteratre over each joint
+    coeffs = quinticpoly(0, time, q0(ii), qf(ii), 0, 0, 0, 0);
+    num_iterations = time / time_step;
+    trajectory = [];
+    for jj = 1:num_iterations
+        t = jj * time_step;
+        q_t = round(coeffs(1) + coeffs(2)*t + coeffs(3)*t^2 + ...
+        coeffs(4)*t^3 + coeffs(5)*t^4 +  + coeffs(6)*t^5);
+        trajectory = [trajectory q_t];
+    end
+    %Print out the results
+    joint = ii
+    trajectory
+end
