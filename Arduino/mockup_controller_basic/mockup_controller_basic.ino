@@ -25,11 +25,19 @@ const int J4_pos[3] = {0, 95, 180};
 const int J5_pos[3] = {0, 85, 180};
 const int J6_pos[3] = {0, 78, 180};
 
-int jointQ[6] = {0, 0, 0, 0, 0, 0};
-//int jointQ[6] = {36, -12, 23, 0, 0, 70};
+//int jointQ[6] = {0, 0, 0, 0, 0, 0};
+int jointQ[6] = {-20, 40, -13, -10, 55, -70};
+//int jointQ[6] = {36, -30, 37, 0, 0, 70};
 
 void setup() {
   // put your setup code here, to run once:
+  J1.write(min(max(J1_pos[0], (jointQ[0] + J1_pos[1])), J1_pos[2]));
+  J2.write(min(max(J2_pos[0], (jointQ[1] + J2_pos[1])), J2_pos[2]));
+  J3.write(min(max(J3_pos[0], (jointQ[2] + J3_pos[1])), J3_pos[2]));
+  J4.write(min(max(J4_pos[0], (jointQ[3] + J4_pos[1])), J4_pos[2]));
+  J5.write(min(max(J5_pos[0], (-jointQ[4] + J5_pos[1])), J5_pos[2]));
+  J6.write(min(max(J6_pos[0], (jointQ[5] + J6_pos[1])), J6_pos[2]));
+  
   J1.attach(J1_pin);
   J2.attach(J2_pin);
   J3.attach(J3_pin);

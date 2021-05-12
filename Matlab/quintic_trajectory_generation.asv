@@ -1,7 +1,7 @@
 n = 6;
-q0 = [36 -30 37 0 0 70];
-qf = [36 -12 37 0 0 70];
-time = 5001; %Total duration of the movement in millis
+q0 = [-20 40 20 -10 55 -70];
+qf = [0 0 0 0 0 0];
+time = 2001; %Total duration of the movement in millis
 time_step = 50; %Number of millis between each iteration in control loop
 
 overall_matrix = [];
@@ -20,4 +20,4 @@ for ii = 1:n %Iteratre over each joint
 end
 
 %Export results to CSV
-writematrix(overall_matrix, 'move1.csv')
+writematrix(overall_matrix, 'move7.csv')
