@@ -1,7 +1,7 @@
 n = 6;
 q0 = [36 -12 23 0 0 70];
-qf = [32 -30 40 0 0 70];
-time = 1500; %Total duration of the movement in millis
+qf = [36 -30 37 0 0 70];
+time = 1001; %Total duration of the movement in millis
 time_step = 50; %Number of millis between each iteration in control loop
 
 overall_matrix = [];

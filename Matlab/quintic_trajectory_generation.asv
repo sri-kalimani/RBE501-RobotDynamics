@@ -1,7 +1,7 @@
 n = 6;
-q0 = [0 0 0 0 0 0];
-qf = [30 -45 30 60 15 60];
-time = 5000; %Total duration of the movement in millis
+q0 = [36 -30 37 0 0 70];
+qf = [36 -12 37 0 0 70];
+time = 5001; %Total duration of the movement in millis
 time_step = 50; %Number of millis between each iteration in control loop
 
 overall_matrix = [];
@@ -15,7 +15,9 @@ for ii = 1:n %Iteratre over each joint
         coeffs(4)*t^3 + coeffs(5)*t^4 +  + coeffs(6)*t^5);
         trajectory = [trajectory q_t];
     end
-    %Print out the results
-    joint = ii
-    trajectory
+    %Append to the overall matrix
+    overall_matrix = [overall_matrix; trajectory];
 end
+
+%Export results to CSV
+writematrix(overall_matrix, 'move1.csv')
