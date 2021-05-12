@@ -25,8 +25,8 @@ const int J4_pos[3] = {0, 95, 180};
 const int J5_pos[3] = {0, 85, 180};
 const int J6_pos[3] = {0, 78, 180};
 
-//int jointQ[6] = {0, 0, 0, 0, 0, 0};
-int jointQ[6] = {-20, 40, -13, -10, 55, -70};
+int jointQ[6] = {0, 0, 0, 0, 0, 0};
+//int jointQ[6] = {-20, 40, -13, -10, 55, -70};
 //int jointQ[6] = {36, -30, 37, 0, 0, 70};
 
 void setup() {
