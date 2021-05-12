@@ -33,7 +33,7 @@ qlim = [-pi/2  pi/2;      % q(1)
 
 % Display the manipulator in the home configuration
 q = zeros(1,6);
-robot.teach(q);
+robot.teach(q);     
 %% Part A - Calculate the screw axes
 w1 = [0; 0; 1];
 w2 = [0; 1; 0];
@@ -98,7 +98,6 @@ for ii = 1 : nTests
     
     % Calculate the forward kinematics
         T = fkine(S, M, q);
-       %T = robot.fkine(q);
     
     if plotOn
         robot.teach(q);
@@ -107,8 +106,10 @@ for ii = 1 : nTests
     
     %For testing
     T_real = robot.fkine(q);
-    T_diff = T - double(T_real);
+%     T_diff = T - double(T_real);
     assert(all(all(abs(double(robot.fkine(q)) - T) < 1e-10)));
+%     fprintf('\nAssertion passed. \n');
+
 end
  
 fprintf('\nTest passed successfully.\n');
@@ -146,6 +147,8 @@ for ii = 1 : nTests
     % Test the correctness of the Jacobian
     J_test = [J_b(4:6,:); J_b(1:3,:)]; % swap the rotation and translation components
     assert(all(all(abs(double(robot.jacobe(q)) - J_test) < 1e-10)));
+%     fprintf('\nAssertion passed. \n');
+
 end
 
 fprintf('\nTest passed successfully.\n');
@@ -183,6 +186,7 @@ for ii = 1 : nTests
     Jref = robot.jacob0(q);
     Jref = Jref(1:3,:);
     assert(all(all(abs(double(Jref) - J_a) < 1e-10)));
+%     fprintf('\nAssertion passed. \n');
 end
 
 fprintf('\nTest passed successfully.\n');
